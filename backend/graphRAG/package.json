@@ -1,0 +1,25 @@
+{
+  "name": "@threadnews/graph",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p .",
+    "test:emulator": "npx -y firebase-tools@latest emulators:exec --only firestore --project demo-threadnews --config ../../firebase.json \"vitest run test/ingest.emulator.test.ts\""
+  },
+  "dependencies": {
+    "@threadnews/shared": "workspace:*",
+    "firebase-admin": "^14.5.1",
+    "graphology": "^0.26.0",
+    "graphology-communities-louvain": "^2.0.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
+  }
+}

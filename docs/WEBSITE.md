@@ -117,7 +117,7 @@ VITE_FIREBASE_AUTH_DOMAIN=
 VITE_FIREBASE_PROJECT_ID=
 VITE_FIREBASE_APP_ID=
 VITE_RECAPTCHA_V3_SITE_KEY=
-VITE_API_BASE_URL=https://threadnews-api.vercel.app
+VITE_API_BASE_URL=https://us-central1-threadnews-4c8bd.cloudfunctions.net/api
 VITE_USE_EMULATORS=false
 ```
 

@@ -1,0 +1,153 @@
+/* ThreadNews design tokens — Chrome palette from the UI design canvas, Inter, light + dark (DESIGN.md §4). */
+@import "tailwindcss";
+@source "../";
+
+:root {
+  --tn-bg: #ffffff;
+  --tn-fg: #202124;
+  --tn-fg-2: #3c4043;
+  --tn-muted: #5f6368;
+  --tn-border: #dadce0;
+  --tn-surface: #f1f3f4;
+  --tn-surface-2: #f8f9fa;
+  --tn-skeleton: #e3e5e8;
+  --tn-primary: #1a73e8;
+  --tn-primary-hover: #174ea6;
+  --tn-on-primary: #ffffff;
+  --tn-primary-soft: #e8f0fe;
+  --tn-primary-tint: #f8faff;
+  --tn-primary-line: #d2e3fc;
+  --tn-current: #188038;
+  --tn-current-soft: #e6f4ea;
+  --tn-moved: #b06000;
+  --tn-moved-soft: #fef7e0;
+  --tn-disputed: #c5221f;
+  --tn-disputed-soft: #fce8e6;
+  --tn-g-blue: #4285f4;
+  --tn-g-red: #ea4335;
+  --tn-g-yellow: #fbbc04;
+  --tn-g-green: #34a853;
+  --tn-dot-past: #9aa0a6;
+  color-scheme: light;
+}
+
+:root.dark {
+  --tn-bg: #202124;
+  --tn-fg: #e8eaed;
+  --tn-fg-2: #bdc1c6;
+  --tn-muted: #9aa0a6;
+  --tn-border: #3c4043;
+  --tn-surface: #303134;
+  --tn-surface-2: #292a2d;
+  --tn-skeleton: #3c4043;
+  --tn-primary: #8ab4f8;
+  --tn-primary-hover: #aecbfa;
+  --tn-on-primary: #202124;
+  --tn-primary-soft: rgb(138 180 248 / 0.16);
+  --tn-primary-tint: rgb(138 180 248 / 0.07);
+  --tn-primary-line: rgb(138 180 248 / 0.35);
+  --tn-current: #81c995;
+  --tn-current-soft: rgb(129 201 149 / 0.16);
+  --tn-moved: #fdd663;
+  --tn-moved-soft: rgb(253 214 99 / 0.14);
+  --tn-disputed: #f28b82;
+  --tn-disputed-soft: rgb(242 139 130 / 0.16);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --tn-bg: #202124;
+    --tn-fg: #e8eaed;
+    --tn-fg-2: #bdc1c6;
+    --tn-muted: #9aa0a6;
+    --tn-border: #3c4043;
+    --tn-surface: #303134;
+    --tn-surface-2: #292a2d;
+    --tn-skeleton: #3c4043;
+    --tn-primary: #8ab4f8;
+    --tn-primary-hover: #aecbfa;
+    --tn-on-primary: #202124;
+    --tn-primary-soft: rgb(138 180 248 / 0.16);
+    --tn-primary-tint: rgb(138 180 248 / 0.07);
+    --tn-primary-line: rgb(138 180 248 / 0.35);
+    --tn-current: #81c995;
+    --tn-current-soft: rgb(129 201 149 / 0.16);
+    --tn-moved: #fdd663;
+    --tn-moved-soft: rgb(253 214 99 / 0.14);
+    --tn-disputed: #f28b82;
+    --tn-disputed-soft: rgb(242 139 130 / 0.16);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-bg: var(--tn-bg);
+  --color-fg: var(--tn-fg);
+  --color-fg-2: var(--tn-fg-2);
+  --color-muted: var(--tn-muted);
+  --color-line: var(--tn-border);
+  --color-surface: var(--tn-surface);
+  --color-surface-2: var(--tn-surface-2);
+  --color-skeleton: var(--tn-skeleton);
+  --color-primary: var(--tn-primary);
+  --color-primary-hover: var(--tn-primary-hover);
+  --color-on-primary: var(--tn-on-primary);
+  --color-primary-soft: var(--tn-primary-soft);
+  --color-primary-tint: var(--tn-primary-tint);
+  --color-primary-line: var(--tn-primary-line);
+  --color-current: var(--tn-current);
+  --color-current-soft: var(--tn-current-soft);
+  --color-moved: var(--tn-moved);
+  --color-moved-soft: var(--tn-moved-soft);
+  --color-disputed: var(--tn-disputed);
+  --color-disputed-soft: var(--tn-disputed-soft);
+  --color-g-blue: var(--tn-g-blue);
+  --color-g-red: var(--tn-g-red);
+  --color-g-yellow: var(--tn-g-yellow);
+  --color-g-green: var(--tn-g-green);
+  --color-dot-past: var(--tn-dot-past);
+}
+
+@layer base {
+  html {
+    background: var(--tn-bg);
+    color: var(--tn-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    margin: 0;
+  }
+  a {
+    color: var(--tn-primary);
+  }
+  a:hover {
+    color: var(--tn-primary-hover);
+  }
+  :focus-visible {
+    outline: 2px solid var(--tn-primary);
+    outline-offset: 2px;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@utility tnum {
+  font-feature-settings: "tnum";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

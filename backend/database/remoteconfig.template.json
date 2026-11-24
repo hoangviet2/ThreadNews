@@ -1,0 +1,100 @@
+{
+  "parameters": {
+    "model_fallback": {
+      "defaultValue": {
+        "value": "gemini-3.5-flash-lite"
+      },
+      "valueType": "STRING"
+    },
+    "model_cloud": {
+      "defaultValue": {
+        "value": "gemini-3.8-flash"
+      },
+      "valueType": "STRING"
+    },
+    "model_embedding": {
+      "defaultValue": {
+        "value": "gemini-embedding-2"
+      },
+      "valueType": "STRING"
+    },
+    "embedding_dims": {
+      "defaultValue": {
+        "value": "768"
+      },
+      "valueType": "NUMBER"
+    },
+    "limits_guest": {
+      "defaultValue": {
+        "value": "{\"retrieve\":20,\"check\":3,\"explainer\":0,\"ask\":0,\"follows\":0}"
+      },
+      "valueType": "JSON"
+    },
+    "limits_member": {
+      "defaultValue": {
+        "value": "{\"retrieve\":200,\"check\":50,\"explainer\":20,\"ask\":30,\"follows\":50}"
+      },
+      "valueType": "JSON"
+    },
+    "global_daily_ai_budget": {
+      "defaultValue": {
+        "value": "1000"
+      },
+      "valueType": "NUMBER"
+    },
+    "graph_freshness_hours": {
+      "defaultValue": {
+        "value": "6"
+      },
+      "valueType": "NUMBER"
+    },
+    "context_tokens_device": {
+      "defaultValue": {
+        "value": "1500"
+      },
+      "valueType": "NUMBER"
+    },
+    "context_tokens_cloud": {
+      "defaultValue": {
+        "value": "8000"
+      },
+      "valueType": "NUMBER"
+    },
+    "story_match_threshold": {
+      "defaultValue": {
+        "value": "0.82"
+      },
+      "valueType": "NUMBER"
+    },
+    "entity_merge_threshold": {
+      "defaultValue": {
+        "value": "0.90"
+      },
+      "valueType": "NUMBER"
+    },
+    "vector_backend": {
+      "defaultValue": {
+        "value": "firestore"
+      },
+      "valueType": "STRING"
+    },
+    "enable_global_search": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "valueType": "BOOLEAN"
+    },
+    "enable_graph_view": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "valueType": "BOOLEAN"
+    },
+    "maintenance_mode": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "valueType": "BOOLEAN"
+    }
+  }
+}

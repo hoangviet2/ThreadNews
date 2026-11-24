@@ -67,7 +67,7 @@ Extension: https://github.com/<org>/threadnews/releases/latest → threadnews-ex
   Open any news article → click the ThreadNews icon → "Enable on-device AI" (first time, model download may take minutes)
 Try: <seeded moved-on article URL>, <seeded current article URL>, <seeded disputed article URL>
 Guest: no sign-in needed (3 cloud checks/day). Member: "Sign in with Google" (50/day).
-API docs: https://threadnews-api.vercel.app/docs
+API docs: https://us-central1-threadnews-4c8bd.cloudfunctions.net/api/docs
 Available through Dec 16, 2026.
 ```
 

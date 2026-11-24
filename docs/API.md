@@ -1,8 +1,8 @@
 # API.md — ThreadNews API (v1)
 
-- **Base URL (prod):** `https://threadnews-api.vercel.app` · **local:** `http://localhost:8787`
+- **Base URL (prod):** `https://us-central1-threadnews-4c8bd.cloudfunctions.net/api` · **local:** `http://localhost:8787`
 - **Interactive docs (public):** `GET /docs` (Scalar) · **OpenAPI:** `GET /v1/openapi.json`
-- **Runtime:** Hono on Node 22, Vercel Hobby. Code: `apps/api`. Schemas: `packages/shared/schemas/api.ts` (Zod → OpenAPI via `@hono/zod-openapi`).
+- **Runtime:** Hono on Node 22, Cloud Functions 2nd gen (`us-central1`). Code: `backend/server`. Schemas: `packages/shared/schemas/api.ts` (Zod → OpenAPI via `@hono/zod-openapi`).
 - **Client:** `packages/shared/api-client` (typed fetch wrapper that attaches tokens, maps errors).
 
 ## Conventions
@@ -91,6 +91,16 @@ GraphRAG retrieval. Local = one story's subgraph; global = community summaries.
 ```
 `storyId: null` → story unknown (client goes to `/v1/check`). Cached in API memory for 10 min per (storyId, mode, budget).
 
+### `POST /v1/graph/search` — quota: `retrieve`
+Explore by keywords: stories in the graph nearest to the query (embedding + keyword overlap).
+```json
+// request
+{ "query": "bank of england interest rates" }
+// 200
+{ "items": [{ "storyId": "cc6m…", "title": "Bank of England Base Interest Rate Change", "summary": "…", "status": "moved_on", "lastUpdatedAt": "…", "score": 0.85 }] }
+```
+Empty `items` → the website offers "Look up the latest", which is a normal `/v1/check` with `headline = query`, `claims: []` and `articleUrl: "keywords"`.
+
 ### `POST /v1/check` — quota: `check` (cache hits free)
 Cloud check with Google Search grounding + GraphRAG context. Ingests results into the graph after responding.
 ```json
@@ -159,7 +169,7 @@ Guests answer local questions on-device with `/v1/graph/retrieve` + Nano.
 
 ## Internal (not in public OpenAPI)
 
-All require `X-Cron-Secret: <CRON_SECRET>`; called by `.github/workflows/cron.yml`.
+All require `X-Cron-Secret: <CRON_SECRET>`; called in-process by the Cloud Scheduler functions in `backend/server/src/functions.ts`.
 
 | Route | Schedule | Does |
 |---|---|---|
@@ -195,7 +205,7 @@ else if (res.error.code === "quota_exceeded" && res.error.details.upgrade) showU
 ```
 
 ```bash
-curl -X POST https://threadnews-api.vercel.app/v1/graph/retrieve \
+curl -X POST https://us-central1-threadnews-4c8bd.cloudfunctions.net/api/v1/graph/retrieve \
   -H "Authorization: Bearer $ID_TOKEN" -H "X-Firebase-AppCheck: $APPCHECK" \
   -H "Content-Type: application/json" \
   -d '{"mode":"local","headline":"…","claims":[],"entities":[],"budget":"device"}'

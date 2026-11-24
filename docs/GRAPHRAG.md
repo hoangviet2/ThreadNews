@@ -14,7 +14,7 @@ News stories are graphs: events in time, claims that get revised, people/orgs in
 ## 2. Pipeline at a glance
 
 ```
-INDEXING  (API: /v1/check via waitUntil, /internal/cron/recheck, scripts/seed-graph)
+INDEXING  (API: /v1/check, before responding, /internal/cron/recheck, scripts/seed-graph)
   GraphExtraction (from Gemini) → canonicalize → match story → resolve entities
   → upsert events → version claims → edges → embeddings → snapshot + dirty flags
 

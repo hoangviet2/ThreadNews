@@ -34,14 +34,14 @@ Note: Thu Nov 26 is US Thanksgiving — plan reduced hours if relevant.
 
 ### Day 3 — Thu Nov 26 · the core check + GraphRAG local
 - [ ] `packages/graph`: ingest (canonicalize, story match, entity resolution, claim versioning, edges, embeddings).
-- [ ] `/v1/check`: research → structure → respond → `waitUntil(ingest)`; cache-first.
+- [ ] `/v1/check`: research → structure → ingest → respond; cache-first.
 - [ ] `/v1/graph/retrieve` local search + packing; deterministic diff.
 - [ ] Extension + web: full Case A/B rendering with ChangeCard + SourceList (Search suggestions).
 
 ### Day 4 — Fri Nov 27 · hybrid graph check, follow, explainer
 - [ ] On-device graph check path for fresh stories (⚡ badge).
 - [ ] Follows API + `/following` page + side panel Follow + alarms badge.
-- [ ] `/internal/cron/recheck` + `cron.yml`.
+- [ ] `/internal/cron/recheck` + Cloud Scheduler (`onSchedule`).
 - [ ] Explainer: `GET/POST /v1/explainer`, `/story/:id` page with timeline from Firestore.
 - [ ] Seed script + 10–20 stories; pick the 3 demo stories.
 

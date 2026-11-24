@@ -60,8 +60,8 @@ sequenceDiagram
   API->>G: grounded research (claims + context, "only news after lastUpdatedAt")
   G-->>API: text + groundingMetadata
   API->>G: structure → CheckResult + GraphExtraction (JSON)
+  API->>FS: ingest (upsert nodes/edges, supersede claims, embeddings, mark dirty), before responding (Cloud Run throttles CPU after the response)
   API-->>SP: {status, changes, sources, grounding, storyId, usage}
-  API->>FS: waitUntil(ingest: upsert nodes/edges, supersede claims, embeddings, mark dirty)
   SP->>SP: render + SourceList (Search suggestions + sources) ☁️
 ```
 
