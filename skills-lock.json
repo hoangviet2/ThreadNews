@@ -1,0 +1,82 @@
+{
+  "version": 2,
+  "skills": {
+    "hig-components-content": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-content/SKILL.md",
+      "computedHash": "90984818c00706bac39922c56ab5e4758b0344648b8b268171bbc367920f98f5"
+    },
+    "hig-components-controls": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-controls/SKILL.md",
+      "computedHash": "8ff92bb670bf7582cceb9ef5b0dbba30ad69ffdc15c52d4aaf941d8dece07c96"
+    },
+    "hig-components-dialogs": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-dialogs/SKILL.md",
+      "computedHash": "74a8c8c076a79b4acfacf673b409247500860a936b32ca16511973d23fc77ea0"
+    },
+    "hig-components-layout": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-layout/SKILL.md",
+      "computedHash": "6ca1ac077c48a8e6bb4373cb3609ec40f06a1cbdf20026c0dae2d4c44b908cf9"
+    },
+    "hig-components-menus": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-menus/SKILL.md",
+      "computedHash": "b28935d708c6dbf8e55b1a94a3a634649034d51711b9dd259eb916dd6a96a990"
+    },
+    "hig-components-search": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-search/SKILL.md",
+      "computedHash": "f2552213936ba57201bd2a200e6f68c787967e0f4513e8dd13e656ca2509ec29"
+    },
+    "hig-components-status": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-components-status/SKILL.md",
+      "computedHash": "43b280c679eb4e16fab9eac8e032352b6891d958084206a1ad8b5a39a0346684"
+    },
+    "hig-foundations": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-foundations/SKILL.md",
+      "computedHash": "1ab8083cc9c920c8d7c7707da07a3fdb8076da7e313040d0650ac22aab26e1ce"
+    },
+    "hig-patterns": {
+      "source": "raintree-technology/hig-doctor",
+      "commit": "a0f1e4ec3c5ada82e538710b54a344db63189d8b",
+      "sourceType": "github",
+      "skillPath": "skills/hig-patterns/SKILL.md",
+      "computedHash": "e53db49f557ab481b5c1280593b432ca2c32a1afcc9e1548a4c1a521449d7baf"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "5994e4cfd86144903d2ba750f862b9e36af15e3297aac983679e347b99f6cb71"
+    }
+  }
+}

@@ -91,12 +91,28 @@ pnpm seed                   # seed the graph (scripts/seed-graph.ts)
 | `docs/ROADMAP.md` | What to build today |
 | `docs/SUBMISSION.md` | Devpost checklist, video, judge access |
 
-## Useful tooling
+## Skills & tooling
 
-```bash
-# Firebase Agent Skills + MCP for Claude Code
-claude plugin marketplace add firebase/agent-skills
-claude plugin install firebase@firebase
-claude mcp add firebase npx -- -y firebase-tools@latest mcp
-```
-Relevant skills: firebase-ai-logic-basics, firebase-basics, firebase-local-env-setup, firebase-hosting-basics, firebase-auth-basics, firebase-firestore-standard, firestore-security-rules-auditor, firebase-remote-config-basics. There is no official skill for hybrid inference or App Check — use `docs/architecture/02-hybrid-ai.md` and the Firebase docs links there.
+Shared for all contributors via `.claude/settings.json`, `.mcp.json` and `.claude/skills/`. First-time setup: `./scripts/setup-claude.sh` (see README → Contributor setup).
+
+**Precedence:** DESIGN.md is the source of truth for colors (Chrome palette), font (Inter) and components. frontend-design and Apple HIG skills give principles only; if they conflict with DESIGN.md, DESIGN.md wins. Repo docs (docs/*) win over generic Firebase skills (e.g. we're on Spark: no Cloud Functions/App Hosting).
+
+**Plugins**
+- `firebase@firebase` (firebase/agent-skills): Firebase CLI, Auth, Firestore, rules, Remote Config, Hosting, AI Logic basics. Use: `firebase-basics`, `firebase-ai-logic-basics`, `firebase-auth-basics`, `firebase-firestore`, `firestore-rules-creation`, `firebase-security-rules-auditor`, `firebase-remote-config-basics`, `firebase-hosting-basics`. Ignore: analytics, crashlytics, data-connect, app-hosting, extension-to-functions, xcode.
+- `frontend-design@claude-plugins-official`: visual polish and design principles for new UI. DESIGN.md wins.
+- `chrome-devtools-mcp@chrome-devtools-plugins`: Chrome DevTools MCP + skills. Debug the website/extension (console, network, performance, a11y, LCP).
+
+**MCP servers**
+- `firebase` (`.mcp.json`): Firebase CLI MCP (projects, rules, emulators, Remote Config).
+- `chrome-devtools`: comes with its plugin.
+
+**Repo skills** (`.claude/skills/`, ours)
+- `firebase-hybrid-inference`: any change touching AI Logic / on-device prompts / ⚡☁️ badge.
+- `firebase-app-check`: App Check init on web/extension, API `X-Firebase-AppCheck` middleware.
+- `chrome-extension-mv3`: anything in `apps/extension` (permissions, auth, extraction, release).
+- `grounded-results`: any UI or API response carrying grounding → `<SourceList>` obligations.
+
+**Vendored skills** (`.claude/skills/`, sources + licenses in `.claude/skills/THIRD_PARTY.md`)
+- `vercel-react-best-practices`: writing/reviewing React for performance.
+- `web-design-guidelines`: UI/accessibility review of web code.
+- `hig-foundations`, `hig-patterns`, `hig-components-{content,controls,dialogs,layout,menus,search,status}`: Apple HIG principles (hierarchy, feedback, controls, loading states). Principles only. DESIGN.md wins.
