@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseContext } from "@threadnews/shared/graph";
-import { canonicalUrl, factKey, normName, rankAndPack, searchScore, stableIds, versionClaim, type PackNode } from "../src";
+import { canonicalUrl, factKey, normName, rankAndPack, searchScore, stableIds, storyMatchScore, versionClaim, type PackNode } from "../src";
 
 describe("text", () => {
   it("normName strips honorifics, accents, punctuation", () => {
@@ -59,5 +59,22 @@ describe("searchScore", () => {
     expect(hit.kw).toBeGreaterThan(0.6);
     expect(miss.kw).toBe(0);
     expect(hit.score).toBeGreaterThan(miss.score);
+  });
+});
+
+describe("storyMatchScore (ADR-019)", () => {
+  const o = { storyMatchThreshold: 0.82, storyMatchCosine: 0.88 };
+  it("no query entities: cosine decides (used to be capped at 0.7 → duplicates)", () => {
+    expect(storyMatchScore(0.85, [], ["nvidia"], o)).toMatchObject({ ok: true, score: 0.85 });
+    expect(storyMatchScore(0.8, [], ["nvidia"], o).ok).toBe(false);
+  });
+  it("entity names that don't line up no longer block a near-identical story", () => {
+    expect(storyMatchScore(0.9, ["nvidia corporation"], ["nvidia", "jensen huang"], o).ok).toBe(true);
+  });
+  it("related-but-different stories stay apart", () => {
+    expect(storyMatchScore(0.82, ["bank of england"], ["office for national statistics"], o).ok).toBe(false);
+  });
+  it("shared entities still lift a moderate match", () => {
+    expect(storyMatchScore(0.8, ["jensen huang", "nvidia"], ["nvidia", "jensen huang", "colette kress"], o).ok).toBe(true);
   });
 });

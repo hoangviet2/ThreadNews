@@ -20,7 +20,7 @@ import {
   type RemoteConfigValues,
 } from "@threadnews/shared";
 import { initializeApp } from "firebase/app";
-import { getToken, initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from "firebase/app-check";
+import { getToken, initializeAppCheck, ReCaptchaEnterpriseProvider, ReCaptchaV3Provider, type AppCheck } from "firebase/app-check";
 import {
   connectAuthEmulator,
   getAuth,
@@ -60,9 +60,13 @@ function build(): Platform {
   const app = initializeApp(options);
 
   let appCheck: AppCheck | null = null;
-  if (env.DEV) globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = true; // local dev: debug provider
-  if (env.VITE_RECAPTCHA_V3_SITE_KEY) {
-    appCheck = initializeAppCheck(app, { provider: new ReCaptchaV3Provider(env.VITE_RECAPTCHA_V3_SITE_KEY), isTokenAutoRefreshEnabled: true });
+  // Local dev only: a debug token registered in App Check (VITE_APPCHECK_DEBUG_TOKEN), else Firebase prints a new one to register.
+  if (env.DEV) globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VITE_APPCHECK_DEBUG_TOKEN || true;
+  // App Check provider: reCAPTCHA Enterprise (the key registered in the console) or classic v3.
+  const enterpriseKey = env.VITE_RECAPTCHA_ENTERPRISE_SITE_KEY;
+  if (enterpriseKey || env.VITE_RECAPTCHA_V3_SITE_KEY) {
+    const provider = enterpriseKey ? new ReCaptchaEnterpriseProvider(enterpriseKey) : new ReCaptchaV3Provider(env.VITE_RECAPTCHA_V3_SITE_KEY!);
+    appCheck = initializeAppCheck(app, { provider, isTokenAutoRefreshEnabled: true });
   }
 
   const fbAuth = getAuth(app);

@@ -25,6 +25,6 @@ writeFileSync(
   JSON.stringify({ name: "threadnews-api-functions", private: true, type: "module", main: "index.mjs", engines: { node: "22" }, dependencies: { "firebase-functions": deps["firebase-functions"], "firebase-admin": deps["firebase-admin"] } }, null, 2),
 );
 // Non-secret runtime config (secrets live in Secret Manager). FIREBASE_* names are reserved by Cloud Functions.
-writeFileSync(`${out}/.env`, ["ALLOWED_ORIGINS=https://threadnews-4c8bd.web.app,https://threadnews-4c8bd.firebaseapp.com,http://localhost:5173,chrome-extension://jkemlohoabppeblpfaimplefhifngjjo", "APP_CHECK_ENFORCE=false", ""].join("\n"));
+writeFileSync(`${out}/.env`, ["ALLOWED_ORIGINS=https://threadnews-4c8bd.web.app,https://threadnews-4c8bd.firebaseapp.com,http://localhost:5173,http://localhost:4173,chrome-extension://jkemlohoabppeblpfaimplefhifngjjo", "APP_CHECK_ENFORCE=false", ""].join("\n"));
 execSync("npm install --omit=dev --no-package-lock --no-audit --no-fund --loglevel=error", { cwd: out, stdio: "inherit" });
 console.log(`built ${out}/index.mjs`);

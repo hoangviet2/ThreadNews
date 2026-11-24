@@ -13,6 +13,8 @@ export type IngestOptions = {
   /** Force this story (created if missing). Omit to match by embedding + entities. */
   storyId?: string;
   storyMatchThreshold: number;
+  /** Similarity alone at or above this is a match (no entity overlap needed). */
+  storyMatchCosine: number;
   entityMergeThreshold: number;
   grounding?: Grounding | null;
 };
@@ -60,16 +62,27 @@ const toDate = (s?: string) => {
   return d && !Number.isNaN(d.getTime()) ? d : undefined;
 };
 
-export async function matchStory(db: Firestore, queryVec: number[], entityNorms: string[], threshold: number) {
+export type StoryMatchOptions = { storyMatchThreshold: number; storyMatchCosine: number };
+
+/**
+ * Same story? 0.7·cosine + 0.3·entity overlap ≥ threshold, or cosine alone ≥ storyMatchCosine.
+ * Without query entities (keyword look-ups, failed extraction) the score is the cosine itself: the old
+ * formula capped those at 0.7, below the threshold, so every such check created a duplicate (ADR-019). Pure.
+ */
+export function storyMatchScore(cos: number, queryEntities: string[], storyEntities: string[], o: StoryMatchOptions) {
+  const score = queryEntities.length ? 0.7 * cos + 0.3 * overlap(queryEntities, storyEntities) : cos;
+  return { score: Math.max(score, cos >= o.storyMatchCosine ? cos : 0), ok: score >= o.storyMatchThreshold || cos >= o.storyMatchCosine };
+}
+
+export async function matchStory(db: Firestore, queryVec: number[], entityNorms: string[], o: StoryMatchOptions) {
   const near = await db
     .collection("kg_stories")
     .findNearest({ vectorField: "embedding", queryVector: queryVec, limit: 5, distanceMeasure: "COSINE", distanceResultField: "_d" })
     .get();
   let best: { id: string; score: number } | null = null;
   for (const d of near.docs) {
-    // Doc says Jaccard; overlap is used because a story's entity list grows while an article names only a few.
-    const score = 0.7 * (1 - (d.get("_d") as number)) + 0.3 * overlap(entityNorms, (d.get("entityNorms") as string[]) ?? []);
-    if (score >= threshold && (!best || score > best.score)) best = { id: d.id, score };
+    const m = storyMatchScore(1 - (d.get("_d") as number), entityNorms, (d.get("entityNorms") as string[]) ?? [], o);
+    if (m.ok && (!best || m.score > best.score)) best = { id: d.id, score: m.score };
   }
   return best;
 }
@@ -132,7 +145,7 @@ export async function ingest(db: Firestore, embed: Embed, x: GraphExtraction, o:
   });
 
   // Story
-  const storyId = o.storyId ?? (await matchStory(db, storyVec, entityNorms, o.storyMatchThreshold))?.id ?? db.collection("kg_stories").doc().id;
+  const storyId = o.storyId ?? (await matchStory(db, storyVec, entityNorms, o))?.id ?? db.collection("kg_stories").doc().id;
   const storyRef = db.doc(`kg_stories/${storyId}`);
   const story = await storyRef.get();
   const created = !story.exists;

@@ -95,6 +95,12 @@
         "value": "false"
       },
       "valueType": "BOOLEAN"
+    },
+    "story_match_cosine": {
+      "defaultValue": {
+        "value": "0.88"
+      },
+      "valueType": "NUMBER"
     }
   }
 }

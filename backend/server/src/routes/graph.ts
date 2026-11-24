@@ -31,6 +31,7 @@ export const graph = new Hono<AppEnv>().post("/retrieve", async (c) => {
       tokensDevice: cfg.context_tokens_device,
       tokensCloud: cfg.context_tokens_cloud,
       storyMatchThreshold: cfg.story_match_threshold,
+      storyMatchCosine: cfg.story_match_cosine,
     });
     res = r.storyId === null ? { storyId: null } : { storyId: r.storyId, matchScore: r.matchScore, fresh: r.fresh, lastUpdatedAt: r.lastUpdatedAt, context: r.context, nodeIds: r.nodeIds, tokenEstimate: r.tokenEstimate };
   }

@@ -16,7 +16,7 @@ const embed = async (texts: string[]) =>
     for (const w of t.toLowerCase().match(/\p{L}+|\d+/gu) ?? []) v[[...w].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 32]! += 1;
     return v;
   });
-const opts = { storyMatchThreshold: 0.6, entityMergeThreshold: 0.9 };
+const opts = { storyMatchThreshold: 0.6, storyMatchCosine: 0.99, entityMergeThreshold: 0.9 };
 
 const day1: GraphExtraction = {
   story: { title: "Earthquake in Xland", summary: "A strong earthquake hit Xland; rescue teams and the Red Cross respond." },
