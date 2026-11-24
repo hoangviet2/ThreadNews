@@ -48,7 +48,7 @@ Caps (Zod): ≤ 10 events, ≤ 30 claims, ≤ 20 entities, ≤ 15 sources.
 1. **Canonicalize** source URLs (strip tracking params, lower host, drop fragments) → `urlHash = sha256(url).slice(0, 32)`.
 2. **Match story**
    - If `storyId` provided → use it.
-   - Else embed `title + summary`; `findNearest(kg_stories.embedding, k=5)`; score = `0.7·cos + 0.3·jaccard(entityNames)`; accept best if ≥ `story_match_threshold` (0.82). Else create a new story.
+   - Else embed `title + summary`; `findNearest(kg_stories.embedding, k=5)`; score = `0.7·cos + 0.3·jaccard(entityNames)`; accept best if ≥ `story_match_threshold` (0.82), or if cosine alone ≥ `story_match_cosine` (0.88); with no query entities the score is the cosine (ADR-019). Else create a new story.
 3. **Resolve entities** (`resolve/entities.ts`)
    - `normName` = lowercase, strip punctuation/diacritics, collapse spaces, drop honorifics ("president", "mr").
    - Exact `normName` or alias hit (same `type`) → existing entity; add new aliases.

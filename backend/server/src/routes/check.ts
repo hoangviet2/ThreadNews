@@ -36,14 +36,14 @@ export function articleSource(req: Pick<CheckRequest, "articleUrl" | "publisher"
   return { url: req.articleUrl, publisher: req.publisher ?? u.hostname.replace(/^www\./, ""), title: req.headline, publishedAt: req.publishedAt };
 }
 
-export const ingestOptions = (cfg: Rc) => ({ storyMatchThreshold: cfg.story_match_threshold, entityMergeThreshold: cfg.entity_merge_threshold });
+export const ingestOptions = (cfg: Rc) => ({ storyMatchThreshold: cfg.story_match_threshold, storyMatchCosine: cfg.story_match_cosine, entityMergeThreshold: cfg.entity_merge_threshold });
 
 export const check = new Hono<AppEnv>().post("/", async (c) => {
   const req = await body(c, CheckRequest);
   const cfg = await rc();
   const embed = embedder(cfg);
   const [qv] = await embed([queryText({ ...req, question: null })]);
-  const storyId = req.storyId ?? (await matchStory(db(), qv!, req.entities.map(normName), cfg.story_match_threshold))?.id;
+  const storyId = req.storyId ?? (await matchStory(db(), qv!, req.entities.map(normName), ingestOptions(cfg)))?.id;
   const ctx = storyId ? await storyContext(db(), storyId, qv!, req.claims, cfg.context_tokens_cloud) : null;
 
   // Cache: the graph was checked recently → deterministic diff against it, no quota.
@@ -67,9 +67,20 @@ export const check = new Hono<AppEnv>().post("/", async (c) => {
     await refund();
     throw e;
   });
-  const sid = ctx?.storyId ?? db().collection("kg_stories").doc().id;
   const checkId = db().collection("users").doc().id;
   const checkedAt = new Date();
+
+  // Pre-match missed? Ingest matches again on the structured result (title, summary, extracted entities), a far
+  // richer signal than the request, and only then creates a story. Runs before responding (Cloud Run throttles
+  // CPU after the response; the story page reads the graph right away). A failed ingest never fails the check.
+  let sid = ctx?.storyId;
+  try {
+    sid = (await ingest(db(), embed, out.extraction, { ...ingestOptions(cfg), checkId, storyId: ctx?.storyId, grounding: out.grounding })).storyId;
+  } catch (e) {
+    console.error(JSON.stringify({ msg: "ingest failed", checkId, err: String(e) }));
+  }
+  sid ??= db().collection("kg_stories").doc().id;
+
   const res: CheckResponse = {
     storyId: sid,
     ...out.check,
@@ -80,13 +91,9 @@ export const check = new Hono<AppEnv>().post("/", async (c) => {
     checkId,
     usage,
   };
-
-  // Ingest before responding: Cloud Run throttles CPU after the response, and the story page reads the graph right away.
-  // An ingest failure never fails the check (the user already paid for it); it's logged.
-  const uid = c.get("uid");
-  await Promise.all([
-    ingest(db(), embed, out.extraction, { ...ingestOptions(cfg), checkId, storyId: sid, grounding: out.grounding }),
-    db().doc(`users/${uid}/checks/${checkId}`).set({
+  await db()
+    .doc(`users/${c.get("uid")}/checks/${checkId}`)
+    .set({
       createdAt: checkedAt,
       articleUrl: req.articleUrl,
       urlHash: urlHash(req.articleUrl),
@@ -99,7 +106,7 @@ export const check = new Hono<AppEnv>().post("/", async (c) => {
       result: out.check,
       inference: "cloud",
       source: "cloud_check",
-    }),
-  ]).catch((e) => console.error(JSON.stringify({ msg: "ingest failed", checkId, err: String(e) })));
+    })
+    .catch((e) => console.error(JSON.stringify({ msg: "check history write failed", checkId, err: String(e) })));
   return c.json(res);
 });

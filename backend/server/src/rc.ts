@@ -14,6 +14,7 @@ export const RC = {
   context_tokens_device: 1500,
   context_tokens_cloud: 8000,
   story_match_threshold: 0.82,
+  story_match_cosine: 0.88,
   entity_merge_threshold: 0.9,
 };
 type Widen<T> = { [K in keyof T]: T[K] extends boolean ? boolean : T[K] extends number ? number : T[K] extends string ? string : T[K] };

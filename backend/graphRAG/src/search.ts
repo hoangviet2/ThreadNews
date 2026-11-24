@@ -98,7 +98,7 @@ export async function storyContext(db: Firestore, storyId: string, queryVec: num
   };
 }
 
-export type LocalOptions = { freshnessHours: number; tokensDevice: number; tokensCloud: number; storyMatchThreshold: number };
+export type LocalOptions = { freshnessHours: number; tokensDevice: number; tokensCloud: number; storyMatchThreshold: number; storyMatchCosine: number };
 
 export const queryText = (r: Pick<RetrieveRequest, "headline" | "claims" | "question">) =>
   r.question ?? `${r.headline} | ${r.claims.map((c) => `${c.subject} ${c.predicate} ${c.value}`).join("; ")}`;
@@ -111,7 +111,7 @@ export async function localSearch(db: Firestore, embed: Embed, req: RetrieveRequ
   let storyId = req.storyId;
   let matchScore = 1;
   if (!storyId) {
-    const m = await matchStory(db, qv!, req.entities.map(normName), o.storyMatchThreshold);
+    const m = await matchStory(db, qv!, req.entities.map(normName), o);
     if (!m) return { storyId: null };
     ({ id: storyId, score: matchScore } = m);
   }

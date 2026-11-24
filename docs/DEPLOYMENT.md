@@ -70,6 +70,7 @@ If vector indexes can't be created on Spark, set Remote Config `vector_backend =
 | `graph_freshness_hours` | `6` | API, clients |
 | `context_tokens_device` / `context_tokens_cloud` | `1500` / `8000` | API |
 | `story_match_threshold` | `0.82` | API |
+| `story_match_cosine` | `0.88` | API (cosine alone counts as the same story, ADR-019) |
 | `entity_merge_threshold` | `0.90` | API |
 | `vector_backend` | `firestore` | API (`firestore` \| `memory`) |
 | `enable_global_search` | `true` | API, clients |
