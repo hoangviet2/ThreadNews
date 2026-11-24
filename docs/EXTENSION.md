@@ -32,7 +32,7 @@ export default defineConfig({
     key: "<base64 public key — keeps the extension ID stable for OAuth + Auth domains>",
     permissions: ["sidePanel", "activeTab", "scripting", "storage", "alarms", "identity"],
     optional_host_permissions: ["https://*/*", "http://*/*"],          // asked at runtime, with explanation
-    host_permissions: ["https://threadnews-api.vercel.app/*"],
+    host_permissions: ["https://us-central1-threadnews-4c8bd.cloudfunctions.net/*"],
     side_panel: { default_path: "sidepanel.html" },
     action: { default_title: "ThreadNews" },
     oauth2: { client_id: "<chrome-extension OAuth client id>.apps.googleusercontent.com",
@@ -124,7 +124,7 @@ WXT_FIREBASE_API_KEY=
 WXT_FIREBASE_AUTH_DOMAIN=
 WXT_FIREBASE_PROJECT_ID=
 WXT_FIREBASE_APP_ID=
-WXT_API_BASE_URL=https://threadnews-api.vercel.app
+WXT_API_BASE_URL=https://us-central1-threadnews-4c8bd.cloudfunctions.net/api
 WXT_APPCHECK_DEBUG_TOKEN=          # judge build only — never commit
 WXT_WEBSITE_URL=https://<project>.web.app
 ```

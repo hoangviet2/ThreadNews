@@ -1,11 +1,28 @@
 {
-  "extraKnownMarketplaces": {
-    "firebase": { "source": { "source": "github", "repo": "firebase/agent-skills" } },
-    "chrome-devtools-plugins": { "source": { "source": "github", "repo": "ChromeDevTools/chrome-devtools-mcp" } }
-  },
   "enabledPlugins": {
     "firebase@firebase": true,
     "frontend-design@claude-plugins-official": true,
-    "chrome-devtools-mcp@chrome-devtools-plugins": true
+    "chrome-devtools-mcp@chrome-devtools-plugins": true,
+    "ponytail@ponytail": true
+  },
+  "extraKnownMarketplaces": {
+    "firebase": {
+      "source": {
+        "source": "github",
+        "repo": "firebase/agent-skills"
+      }
+    },
+    "chrome-devtools-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "ChromeDevTools/chrome-devtools-mcp"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
   }
 }

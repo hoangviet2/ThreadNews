@@ -25,7 +25,7 @@ flowchart TB
   end
   subgraph GitHub[GitHub · public repo]
     CI[Actions: CI + release]
-    CRON[Actions: cron.yml]
+    CRON[Cloud Scheduler: onSchedule]
     REL[Releases: extension zip]
   end
   GEM[Gemini Developer API<br/>free tier · API key]
@@ -70,7 +70,7 @@ If a free limit is hit, the app **degrades, not dies**: on-device summary, gatek
 | Env | Firebase | API | Notes |
 |---|---|---|---|
 | `local` | Emulators (Auth, Firestore) | `pnpm dev` on :8787 | App Check debug tokens; Gemini key from `.env.local` |
-| `prod` | `threadnews-prod` (Spark) | `threadnews-api.vercel.app` | The only deployed env (no staging — time) |
+| `prod` | `threadnews-4c8bd` (Blaze, trial credit) | `us-central1-threadnews-4c8bd.cloudfunctions.net/api` | The only deployed env (no staging — time) |
 
 ## Upgrade path (if we get Blaze later)
 

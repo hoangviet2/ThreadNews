@@ -94,7 +94,7 @@ Cite the ids you used.
 
 ---
 
-## 6. `CHECK_RESEARCH_V1` — API, `gemini-3.8-flash` + Google Search tool (grounded, free text)
+## 6. `CHECK_RESEARCH_V3` — API, `gemini-3.8-flash` + Google Search tool (grounded, free text)
 ```
 You are checking whether a news story has developed since an article was published.
 Article: "{headline}" by {publisher}, published {publishedAt}. URL: {articleUrl}
@@ -106,10 +106,13 @@ Report, as short bullet points:
 1. For each article claim: still the latest value? If not, the newer value, the date, and which outlet reported it.
 2. Any major new development that overtakes the article (e.g., deal collapsed, person resigned, verdict reached).
 3. Where reputable sources disagree.
+4. Where the story started: the date and one line on the first report or triggering event, if the results show it.
 Only include facts supported by search results. If nothing changed, say so clearly.
+Search efficiently: start with ONE query that combines the story's subject and its key claims. Run another query only if a claim is not covered by the first results. Never more than 3 queries.
 ```
+V2 (search budget line): Google Search is billed per query; on the A/B set it cut searches 5 → 3 with identical status and changes. EXPLAINER_V2 adds the same line. V3 (line 4): the story's origin, so a still-current story's timeline can show where it started (STRUCTURE_CHECK_V2 orders events oldest first, origin included).
 
-## 7. `STRUCTURE_CHECK_V1` — API, `gemini-3.5-flash-lite`, JSON schema (no tools)
+## 7. `STRUCTURE_CHECK_V2` — API, `gemini-3.5-flash-lite`, JSON schema (no tools)
 **Output — `CheckAndExtract`**
 ```ts
 { check: { status: Status; summary: string; changes: Change[] };
@@ -126,7 +129,7 @@ Do not invent URLs, dates or numbers not present in the notes.
 ```
 If the day-1 spike shows Search + JSON schema work in one call, merge 6 and 7 (`CHECK_GROUNDED_JSON_V1`).
 
-## 8. `EXPLAINER_V1` — API, `gemini-3.8-flash` + Google Search, JSON
+## 8. `EXPLAINER_V2` — API, `gemini-3.8-flash` + Google Search, JSON
 **Output — `Explainer`**: sections `what_changed`, `background`, `bigger_picture`, `known_disputed` (items with `state: known|disputed`), `glossary` (term/definition ≤ 8). Each body ≤ 180 words, plain English (~grade 8), `citations` = indices into grounding chunks or graph source ids.
 ```
 Write an explainer for a reader who read an older article about this story and wants to catch up.

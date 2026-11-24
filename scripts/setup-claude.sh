@@ -13,8 +13,9 @@ command -v claude >/dev/null || { echo "claude CLI not found: https://docs.claud
 # Marketplace adds are idempotent-ish: ignore "already added".
 claude plugin marketplace add firebase/agent-skills || true
 claude plugin marketplace add ChromeDevTools/chrome-devtools-mcp || true
+claude plugin marketplace add DietrichGebert/ponytail || true
 
-for p in firebase@firebase frontend-design@claude-plugins-official chrome-devtools-mcp@chrome-devtools-plugins; do
+for p in firebase@firebase frontend-design@claude-plugins-official chrome-devtools-mcp@chrome-devtools-plugins ponytail@ponytail; do
   claude plugin install "$p" --scope project || echo "warn: $p not installed (already installed elsewhere? check /plugin)" >&2
 done
 

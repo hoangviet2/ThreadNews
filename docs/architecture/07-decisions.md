@@ -66,3 +66,22 @@ Short records: **context → decision → consequences**. Add new ones at the bo
 ### ADR-014 · Website on Firebase Hosting; extension built with WXT — Accepted
 - **Decision:** Vite + React SPA on Hosting (free, judge URL). WXT for MV3 with React, HMR and zip packaging.
 - **Consequences:** Shared `packages/ui` across both.
+
+### ADR-015 · Story match uses entity overlap, not Jaccard — Accepted
+- **Context:** `0.7·cos + 0.3·jaccard ≥ 0.82` (GRAPHRAG §3.2.2) is unreachable for retrieval: an article names 1–10 entities while a story accumulates up to 40, so Jaccard stays small. Found by the emulator test.
+- **Decision:** Score = `0.7·cos + 0.3·overlap`, overlap = `|A∩B| / min(|A|,|B|)`. Threshold unchanged (Remote Config `story_match_threshold`).
+- **Consequences:** Retrieval can match known stories; tune the threshold with `pnpm eval`.
+
+### ADR-016 · Graph writes in ordered batches, not BulkWriter — Accepted
+- **Context:** BulkWriter doesn't keep write order, so an update could reach a document before the set that creates it in the same ingest.
+- **Decision:** `batchWriter()` in `backend/graphRAG/src/ingest.ts` commits ordered `WriteBatch`es of ≤ 400. The idempotency marker `kg_meta/ingest_{checkId}` is written last, so a failed ingest is retried in full.
+
+### ADR-017 · Blaze on the $300 Google Cloud trial credit — Accepted (supersedes ADR-005)
+- **Context:** Google Search grounding has no free quota on current Gemini models, so billing was enabled. The team has a $300 Google Cloud trial credit.
+- **Decision:** `threadnews-4c8bd` runs on Blaze, paid by the trial credit, with a budget alert. Free tiers still come first. The API stays on Vercel; Cloud Run / Cloud Functions, Cloud Scheduler and Secret Manager are approved options (CLAUDE.md → Google Cloud).
+- **Consequences:** Cloud Run would remove the service-account key (runtime identity) and co-locate the API with Firestore. The credit expires 90 days after activation, so decide on keeping or shutting down the project after judging (Dec 16).
+
+### ADR-018 · API on Cloud Functions 2nd gen + Cloud Scheduler — Accepted (supersedes the Vercel part of ADR-005)
+- **Context:** Blaze is available (ADR-017). On Vercel the API needed a service-account key and the cron ran from GitHub Actions.
+- **Decision:** Deploy the same Hono app as `onRequest` in us-central1 (next to Firestore `nam5`), with 3 `onSchedule` jobs calling the `/internal/cron/*` routes in-process. Secrets live in Secret Manager. The Vercel entry stays as a fallback.
+- **Consequences:** No service-account key in production. Cron needs no GitHub secrets. Cold start was about 0.4 s and warm about 0.15 s on `/v1/health`. Deploys use the Firebase CLI.

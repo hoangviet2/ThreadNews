@@ -4,7 +4,7 @@
 
 Built for **#BuildHybridAI 2026** with **Firebase AI Logic hybrid inference**: Gemini Nano runs on your computer first; the cloud (Gemini + Google Search) is used only when needed. A **knowledge graph with GraphRAG** remembers every story, so known stories are checked entirely on-device.
 
-- **Website:** `https://<project-id>.web.app` · **API docs:** `https://<api>.vercel.app/docs`
+- **Website:** `https://<project-id>.web.app` · **API docs:** `https://us-central1-threadnews-4c8bd.cloudfunctions.net/api/docs`
 - **Extension:** download the latest `threadnews-extension.zip` from [Releases](../../releases) → see *Install the extension* below.
 - **Demo video:** `<YouTube link>`
 
@@ -64,9 +64,9 @@ Everyone gets the same plugins, skills and MCP servers from `.claude/settings.js
 
 1. Clone the repo and `cd` into it.
 2. Run `claude` and **trust the folder** when prompted (this also approves the project MCP servers).
-3. Run `./scripts/setup-claude.sh` once. It installs the 3 project plugins; project settings alone don't always prompt for them.
+3. Run `./scripts/setup-claude.sh` once. It installs the 4 project plugins; project settings alone don't always prompt for them.
 4. Run `npx -y firebase-tools@latest login` once so the Firebase MCP can reach your projects (the emulators work without it).
-5. Check: `/plugin` shows `firebase`, `frontend-design` and `chrome-devtools-mcp` enabled; `/skills` lists the repo skills (`firebase-hybrid-inference`, `firebase-app-check`, `chrome-extension-mv3`, `grounded-results`) + the vendored ones; `claude mcp list` shows `firebase` and `chrome-devtools` connected.
+5. Check: `/plugin` shows `firebase`, `frontend-design`, `chrome-devtools-mcp` and `ponytail` enabled; `/skills` lists the repo skills (`firebase-hybrid-inference`, `firebase-app-check`, `chrome-extension-mv3`, `grounded-results`) + the vendored ones; `claude mcp list` shows `firebase` and `chrome-devtools` connected.
 
 Rules for which skill wins when they conflict: `CLAUDE.md` → *Skills & tooling*.
 

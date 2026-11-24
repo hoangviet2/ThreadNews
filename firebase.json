@@ -1,1 +1,72 @@
-{}
+{
+  "hosting": {
+    "public": "frontend/website/dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|woff2)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=31536000,immutable"
+          }
+        ]
+      },
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Permissions-Policy",
+            "value": "camera=(), microphone=(), geolocation=()"
+          }
+        ]
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "backend/database/firestore.rules",
+    "indexes": "backend/database/firestore.indexes.json"
+  },
+  "remoteconfig": {
+    "template": "backend/database/remoteconfig.template.json"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  },
+  "functions": [
+    {
+      "source": "backend/server/.functions",
+      "codebase": "api",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules/.cache"
+      ]
+    }
+  ]
+}

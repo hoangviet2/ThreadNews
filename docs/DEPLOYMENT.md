@@ -47,31 +47,14 @@ gcloud firestore indexes composite create --project=threadnews-prod \
 ```
 If vector indexes can't be created on Spark, set Remote Config `vector_backend = "memory"` (ADR-013).
 
-## 4. API on Vercel (Hobby)
+## 4. API on Cloud Functions (2nd gen)
 
-- New Vercel project → import repo → **Root directory `apps/api`** → framework "Other".
-- `apps/api/api/[[...route]].ts`:
-  ```ts
-  import { handle } from "hono/vercel";
-  import { app } from "../src/app";
-  export const config = { runtime: "nodejs", maxDuration: 60 };
-  export default handle(app);
-  ```
-- `apps/api/vercel.json`: `{ "regions": ["iad1"] }` (match Firestore region).
-- Environment variables (Production):
-
-| Var | Value |
-|---|---|
-| `FIREBASE_PROJECT_ID` | `threadnews-prod` |
-| `FIREBASE_CLIENT_EMAIL` | from service account JSON |
-| `FIREBASE_PRIVATE_KEY` | from service account JSON (keep `\n`) |
-| `GEMINI_API_KEY` | AI Studio key |
-| `CRON_SECRET` | random 32+ chars |
-| `ALLOWED_ORIGINS` | `https://threadnews-prod.web.app,https://threadnews-prod.firebaseapp.com,chrome-extension://<ID>` |
-| `APP_CHECK_ENFORCE` | `true` |
-| `LOG_LEVEL` | `info` |
-
-- Push to `main` → auto-deploy. Public docs at `https://<api>.vercel.app/docs`.
+- Code: `backend/server/src/functions.ts` → `api` (`onRequest`, us-central1, 512 MiB, 60 s) + `cronCommunities` / `cronRecheck` / `cronCleanup` (`onSchedule`, UTC).
+- Secrets (once): `firebase functions:secrets:set GEMINI_API_KEY` and `CRON_SECRET` (Secret Manager). Non-secret config (`ALLOWED_ORIGINS`, `APP_CHECK_ENFORCE`) is written to `.functions/.env` by `scripts/build-functions.mjs`.
+- Deploy: `pnpm deploy:api` (esbuild bundle into `backend/server/.functions`, then `firebase deploy --only functions:api`). The first deploy enables Cloud Build, Run, Scheduler, Artifact Registry and Eventarc.
+- Live: `https://us-central1-threadnews-4c8bd.cloudfunctions.net/api` (docs at `/docs`). Runs as the default compute service account, so production needs **no service-account key**.
+- Fallback: `pnpm --filter @threadnews/server deploy:vercel` (Build Output API bundle in `.vercel/output`, env vars in the Vercel project).
+- The API reads the Remote Config template that `firebase deploy --only remoteconfig` publishes (default values), not a separate server template.
 
 ## 5. Remote Config parameters (`remoteconfig.template.json`)
 
@@ -108,31 +91,8 @@ CI does this on `main` (below). URL: `https://threadnews-prod.web.app`.
 ### `ci.yml` (push / PR)
 `pnpm i --frozen-lockfile` → `pnpm lint` → `pnpm typecheck` → `pnpm test` → `pnpm build`. On `main`: deploy hosting + rules with `FirebaseExtended/action-hosting-deploy` (service account secret `FIREBASE_SERVICE_ACCOUNT`).
 
-### `cron.yml` (scheduled jobs — free on public repos)
-```yaml
-name: cron
-on:
-  schedule:
-    - cron: "7 * * * *"      # hourly: communities
-    - cron: "17 */6 * * *"   # every 6 h: recheck followed stories
-    - cron: "27 4 * * *"     # daily: cleanup
-  workflow_dispatch: {}
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Call API
-        env: { API: ${{ secrets.API_BASE_URL }}, SECRET: ${{ secrets.CRON_SECRET }} }
-        run: |
-          case "${{ github.event.schedule }}" in
-            "7 * * * *")    path=communities ;;
-            "17 */6 * * *") path=recheck ;;
-            "27 4 * * *")   path=cleanup ;;
-            *)              path=communities ;;
-          esac
-          curl -fsS -X POST "$API/internal/cron/$path" -H "X-Cron-Secret: $SECRET" --max-time 70
-```
-Note: scheduled workflows can drift ±15 min and are paused after 60 days without repo activity (not an issue before Dec 16).
+### Scheduled jobs
+Cloud Scheduler via `onSchedule` in `backend/server/src/functions.ts`: communities `7 * * * *`, recheck `17 */6 * * *`, cleanup `27 4 * * *` (UTC). They call the `/internal/cron/*` routes in-process. No GitHub secrets are needed for cron.
 
 ### `release-extension.yml` (tag `ext-v*`)
 Build with `WXT_*` secrets → `pnpm --filter extension zip` → upload to the GitHub Release.

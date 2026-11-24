@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -225,3 +225,13 @@ __marimo__/
 # Claude Code (personal, never commit)
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Node / frontends
+node_modules/
+.output/
+.wxt/
+.env.*
+!.env.example
+*.tsbuildinfo
+.vercel/
+firestore-debug.log
