@@ -60,12 +60,13 @@ Full setup: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Contributor setup (Claude Code)
 
-Everyone gets the same plugins, skills and MCP servers from `.claude/settings.json`, `.mcp.json` and `.claude/skills/`.
+Everyone gets the same plugins, skills and MCP servers from `.claude/settings.json` and `.claude/skills/` (MCP servers come with the plugins).
 
 1. Clone the repo and `cd` into it.
 2. Run `claude` and **trust the folder** when prompted (this also approves the project MCP servers).
 3. Run `./scripts/setup-claude.sh` once. It installs the 3 project plugins; project settings alone don't always prompt for them.
-4. Check: `/plugin` shows `firebase`, `frontend-design` and `chrome-devtools-mcp` enabled; `/skills` lists the repo skills (`firebase-hybrid-inference`, `firebase-app-check`, `chrome-extension-mv3`, `grounded-results`) + the vendored ones; `claude mcp list` shows `firebase` and `chrome-devtools` connected.
+4. Run `npx -y firebase-tools@latest login` once so the Firebase MCP can reach your projects (the emulators work without it).
+5. Check: `/plugin` shows `firebase`, `frontend-design` and `chrome-devtools-mcp` enabled; `/skills` lists the repo skills (`firebase-hybrid-inference`, `firebase-app-check`, `chrome-extension-mv3`, `grounded-results`) + the vendored ones; `claude mcp list` shows `firebase` and `chrome-devtools` connected.
 
 Rules for which skill wins when they conflict: `CLAUDE.md` → *Skills & tooling*.
 

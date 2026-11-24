@@ -93,7 +93,7 @@ pnpm seed                   # seed the graph (scripts/seed-graph.ts)
 
 ## Skills & tooling
 
-Shared for all contributors via `.claude/settings.json`, `.mcp.json` and `.claude/skills/`. First-time setup: `./scripts/setup-claude.sh` (see README → Contributor setup).
+Shared for all contributors via `.claude/settings.json` and `.claude/skills/`. First-time setup: `./scripts/setup-claude.sh` (see README → Contributor setup).
 
 **Precedence:** DESIGN.md is the source of truth for colors (Chrome palette), font (Inter) and components. frontend-design and Apple HIG skills give principles only; if they conflict with DESIGN.md, DESIGN.md wins. Repo docs (docs/*) win over generic Firebase skills (e.g. we're on Spark: no Cloud Functions/App Hosting).
 
@@ -102,9 +102,9 @@ Shared for all contributors via `.claude/settings.json`, `.mcp.json` and `.claud
 - `frontend-design@claude-plugins-official`: visual polish and design principles for new UI. DESIGN.md wins.
 - `chrome-devtools-mcp@chrome-devtools-plugins`: Chrome DevTools MCP + skills. Debug the website/extension (console, network, performance, a11y, LCP).
 
-**MCP servers**
-- `firebase` (`.mcp.json`): Firebase CLI MCP (projects, rules, emulators, Remote Config).
-- `chrome-devtools`: comes with its plugin.
+**MCP servers** (both come with their plugins, so there's no `.mcp.json`)
+- `firebase`: Firebase CLI MCP (projects, rules, emulators, Remote Config). Needs `firebase login` once.
+- `chrome-devtools`: Chrome DevTools MCP.
 
 **Repo skills** (`.claude/skills/`, ours)
 - `firebase-hybrid-inference`: any change touching AI Logic / on-device prompts / ⚡☁️ badge.

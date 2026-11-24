@@ -4,7 +4,7 @@
 # Why this exists: .claude/settings.json declares our marketplaces + enabledPlugins, but
 # Claude Code doesn't always prompt contributors to install project plugins when they trust
 # the folder. This script installs them explicitly (project scope). Safe to re-run.
-# Skills in .claude/skills/ and the MCP servers in .mcp.json need no install step.
+# Skills in .claude/skills/ need no install step; the firebase + chrome-devtools MCP servers come with the plugins.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -19,3 +19,8 @@ for p in firebase@firebase frontend-design@claude-plugins-official chrome-devtoo
 done
 
 claude mcp list
+
+# Firebase MCP uses the Firebase CLI's credentials.
+if npx -y firebase-tools@latest login:list 2>/dev/null | grep -q 'No authorized accounts'; then
+  echo "Next: run 'npx -y firebase-tools@latest login' so the Firebase MCP can reach your projects."
+fi
